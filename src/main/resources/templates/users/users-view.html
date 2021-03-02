@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layouts/public-layout.html :: 'head' ">
+</head>
+
+<body id="page-top">
+	<!-- Navigation-->
+	<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+		<div class="container" sec:authorize="isAuthenticated()">
+			<a class="navbar-brand js-scroll-trigger" href="#page-top">Los
+				Chinitos</a>
+			<button class="navbar-toggler navbar-toggler-right" type="button"
+				data-toggle="collapse" data-target="#navbarResponsive"
+				aria-controls="navbarResponsive" aria-expanded="false"
+				aria-label="Toggle navigation">
+				Menu <i class="fas fa-bars ml-1"></i>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarResponsive">
+				<ul class="navbar-nav text-uppercase ml-auto">
+					<li class="nav-item"><a class="nav-link js-scroll-trigger"
+						th:href="@{/store/home}">Menú Principal</a></li>
+					<!-- ENLACE A USUARIOS -->
+					<li class="nav-item"><a class="nav-link js-scroll-trigger"
+						th:href="@{/users/users-view}">Usuarios</a></li>
+
+					<li class="nav-item"><a class="nav-link js-scroll-trigger"
+						href="#team"> <span class="btn btn-light btn-sm"
+							sec:authentication="name"></span></a></li>
+
+					<li class="nav-item">
+						<form th:action="@{/logout}" class="nav-link js-scroll-trigger"
+							method="post">
+							<button class="btn btn-danger btn-sm" type="submit">CERRAR
+								SESIÓN</button>
+						</form>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<div class="container">
+		<h1 th:text="${titulo}"></h1>
+		<div class="form-group">
+			<div class="container">
+				<button class="btn btn-primary"
+					onclick="AbrirModalRegistroUsuario()">
+					<i class="glyphicon glyphicon-plus"></i>&nbsp;Nuevo Usuario
+				</button>
+			</div>
+		</div>
+		<br>
+		<table class="table">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">USERNAME</th>
+					<th scope="col">NOMBRES</th>
+					<th scope="col">APELLIDOS</th>
+					<th scope="col">TELEFONO</th>
+					<th scope="col">CORREO</th>
+					<th scope="col">ESTADO</th>
+					<th scope="col">ACCIONES</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="usu: ${usuarios}">
+					<th th:text="${usu.nickname}"></th>
+					<td th:text="${usu.names}"></td>
+					<td th:text="${usu.lastnames}"></td>
+					<td th:text="${usu.phone}"></td>
+					<td th:text="${usu.email}"></td>
+					<td th:text="${usu.currentState.state.description}"></td>
+					<td>
+						<button type="button" class="btn btn-primary">
+							<i class="far fa-edit"></i>
+						</button>
+						<button type="button" class="btn btn-danger">
+							<i class="fas fa-trash"></i>
+						</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<form method="post" th:object="${usuario}" th:action="@{/newUser}">
+		<div class="modal fade" id="modal_registro_usuario" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">
+							<b>Registro de Nuevo Usuario</b>
+						</h3>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<div class="row no-gutters">
+							<div class="col-12 col-sm-6 col-md-8"
+								style="border: 2px solid silver">
+								<br>
+								<h4 style="text-align: center;">Datos Personales</h4>
+								<br>
+								<div class="form-group row">
+									&nbsp;&nbsp;&nbsp;<label for="" class="col-sm-2 col-form-label">Nombres</label>
+									<div class="col-sm-9">
+										<input type="text" th:field="*{names}" class="form-control"
+											id="names" placeholder="Ingrese los nombres" /> <br>
+									</div>
+								</div>
+								<div class="form-group row">
+									&nbsp;&nbsp;&nbsp;<label for="" class="col-sm-2 col-form-label">Apellidos</label>
+									<div class="col-sm-9">
+										<input type="text" th:field="*{lastnames}"
+											class="form-control" id="lastnames"
+											placeholder="Ingrese los apellidos" /> <br>
+									</div>
+								</div>
+								<div class="form-group row">
+									&nbsp;&nbsp;&nbsp;<label for="staticEmail"
+										class="col-sm-2 col-form-label">Cédula</label>
+									<div class="col-sm-9">
+										<input type="text" th:field="*{numDocument}"
+											class="form-control" id="numDocument"
+											placeholder="Ingrese la cédula" /> <br>
+									</div>
+								</div>
+							</div>
+							<div class="col-6 col-md-4" style="border: 2px solid silver">
+								<br>
+								<h4>Imagen del Usuario</h4>
+								<div class="card">
+									<img class="card-img-top" src="/img/user.png"
+										alt="Card image cap">
+									<div class="card-body" style="width: auto;">
+										&nbsp;<input type="file" value="Seleccionar archivo"
+											style="color: transparent" />
+									</div>
+								</div>
+							</div>
+						</div>
+						<br> <br>
+						<ul class="nav nav-tabs justify-content-center" id="myTab"
+							role="tablist">
+							<li class="nav-item"><a class="nav-link active"
+								id="home-tab" data-toggle="tab" href="#home" role="tab"
+								aria-controls="home" aria-selected="true">Datos de contacto</a></li>
+							<li class="nav-item"><a class="nav-link" id="profile-tab"
+								data-toggle="tab" href="#profile" role="tab"
+								aria-controls="profile" aria-selected="false">Cuenta de
+									usuario</a></li>
+						</ul>
+						<div class="tab-content" id="myTabContent">
+							<div class="tab-pane fade show active" id="home" role="tabpanel"
+								aria-labelledby="home-tab">
+								<br>
+								<div class="form-group row">
+									&nbsp;&nbsp;&nbsp;<label for="" class="col-sm-2 col-form-label">Correo
+										Electrónico</label>
+									<div class="col-sm-9">
+										<input type="text" th:field="*{email}" class="form-control"
+											id="email" placeholder="Ingrese un correo" /> <br>
+									</div>
+								</div>
+								<div class="form-group row">
+									&nbsp;&nbsp;&nbsp;<label for="" class="col-sm-2 col-form-label">Teléfono
+										celular</label>
+									<div class="col-sm-9">
+										<input type="text" th:field="*{phone}" class="form-control"
+											id="phone" placeholder="Ingrese el teléfono" /> <br>
+									</div>
+								</div>
+								<div class="form-group row">
+									&nbsp;&nbsp;&nbsp;<label for="" class="col-sm-2 col-form-label">Dirección</label>
+									<div class="col-sm-9">
+										<select class="form-control" th:field="*{addressHome}"
+											name="txt_direccion" id="addressHome">
+											<option value="">Selecione una opción</option>
+											<option th:each="direccion:${direcciones}"
+												th:value="${direccion.code}" th:text="${direccion.city}" />
+										</select><br>
+									</div>
+								</div>
+
+							</div>
+							<div class="tab-pane fade" id="profile" role="tabpanel"
+								aria-labelledby="profile-tab">
+								<br>
+								<div class="form-group row">
+									&nbsp;&nbsp;&nbsp;<label for="" class="col-sm-2 col-form-label">Nombre
+										de usuario</label>
+									<div class="col-sm-9">
+										<input type="text" th:field="*{nickname}" class="form-control"
+											id="nickname" placeholder="Ingrese el nombre de usuario" />
+										<br>
+									</div>
+								</div>
+								<div class="form-group row">
+									&nbsp;&nbsp;&nbsp;<label for="" class="col-sm-2 col-form-label">Contraseña</label>
+									<div class="col-sm-9">
+										<input type="text" class="form-control" id="password"
+											disabled="true" placeholder="Generada aleatoriamente" /> <br>
+									</div>
+								</div>
+							</div>
+						</div>
+						<input type="hidden" id="currentState" name="currentState" value="1" />
+					</div>
+					<div class="modal-footer">
+						<i class="fa fa-check"></i>&nbsp; <input type="submit"
+							class="btn btn-primary" value="Guardar" onclick="userRegister();" />
+
+						<button type="button" class="btn btn-danger" data-dismiss="modal">
+							<i class="fa fa-close"></i>&nbsp;Cerrar
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
+	<!-- <form method="post" th:object="${usuario}" th:action="@{/newUser}">
+		<div class="modal fade" id="modal_registro_usuario" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">
+							<b>Registro de Nuevo Usuario</b>
+						</h3>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<div class="row" style="border: 2px solid silver">
+							<h4>Datos Personales</h4>
+							<div class="col-lg-6">
+								<label for="">Nombres</label> <input type="text"
+									th:field="*{names}" class="form-control" id="names"
+									placeholder="Ingrese los nombres" /> <br>
+							</div>
+							<div class="col-lg-6">
+								<label for="">Apellidos</label> <input type="text"
+									th:field="*{lastnames}" class="form-control" id="lastnames"
+									placeholder="Ingrese los apellidos" /> <br>
+							</div>
+							<div class="col-lg-6">
+								<label for="">Cédula</label> <input type="text"
+									th:field="*{numDocument}" class="form-control" id="numDocument"
+									placeholder="Ingrese la cédula" /> <br>
+							</div>
+							<div class="col-lg-6">
+								<label for="">Fecha de nacimiento</label>
+								<br>
+							</div>
+							<div class="col-lg-6">
+								<label for="">Correo</label> <input type="text"
+									th:field="*{email}" class="form-control" id="email"
+									placeholder="Ingrese un correo" /> <br>
+							</div>
+							<div class="col-lg-6">
+								<label for="">Teléfono</label> <input type="text"
+									th:field="*{phone}" class="form-control" id="phone"
+									placeholder="Ingrese el teléfono" /> <br>
+							</div>
+							<div class="col-lg-6">
+								<label for="">Direcciones</label> <select class="form-control"
+									th:field="*{addressHome}" name="txt_direccion" id="addressHome">
+									<option value="">Selecione una opción</option>
+									<option th:each="direccion:${direcciones}"
+										th:value="${direccion.code}" th:text="${direccion.city}" />
+								</select><br>
+							</div>
+							<input type="hidden" id="currentState" name="currentState"
+								value="1" />
+						</div>
+						<br> <br>
+
+						<div class="row" style="border: 2px solid silver">
+							<h4>Datos de Acceso</h4>
+							<div class="col-lg-6">
+								<label for="">Nombre de usuario</label> <input type="text"
+									th:field="*{nickname}" class="form-control" id="nickname"
+									placeholder="Ingrese el nombre de usuario" /> <br>
+							</div>
+							<div class="col-lg-6">
+								<label for="">Contraseña</label> <input type="hidden"
+									th:field="*{password}" value="123456789" /> <input type="text"
+									class="form-control" id="password" disabled="true"
+									placeholder="Generada aleatoriamente" /> <br>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<i class="fa fa-check"></i>&nbsp; <input type="submit"
+							class="btn btn-primary" value="Guardar" onclick="userRegister();" />
+
+						<button type="button" class="btn btn-danger" data-dismiss="modal">
+							<i class="fa fa-close"></i>&nbsp;Cerrar
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form> -->
+
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- Third party plugin JS-->
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+	<script src="/js/users.js"></script>
+
+	<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+
+</body>
+
+
+</html>

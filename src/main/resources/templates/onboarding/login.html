@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layouts/public-layout.html :: 'head' ">
+</head>
+<body>
+	<header th:replace="layouts/public-layout.html :: 'header' ">
+	</header>
+	<main class="container">
+		<div class="row">
+			<section class="col-sm-6">
+				<div class="portfolio-item">
+					<img class="img-fluid" th:src="@{/img/Monster_Portada.png}"
+						th:title="Comercializadora_Monster"
+						th:alt="Comercializadora_Monster" />
+				</div>
+			</section>
+			<section class="col-sm-6 card border-secondary pb-4 mt-6">
+				<h6 class="card-header">Inicio de Sesión</h6>
+				<div class="alert alert-danger m-3" role="alert"
+					th:if="${error != null}" th:text="${error}"></div>
+					<div class="alert alert-danger m-3" role="alert"
+					th:if="${errorMessage != null}" th:text="${errorMessage}"></div>
+				<div class="card-body">
+					<form th:action="@{/onboarding/login}" method="post">
+						<div class="mb-3">
+							<label for="username" class="form-label">Nombre de usuario:</label> <input
+								name="username" type="text" class="form-control" id="username"
+								aria-describedby="emailHelp" autofocus required>
+							<div id="emailHelp" class="form-text">Ingrese el nombre de
+								usuario.</div>
+						</div>
+						<div class="mb-3">
+							<label for="passUser" class="form-label">Contraseña:</label> <input
+								name="password" type="password" class="form-control"
+								id="passUser" required>
+						</div>
+						<div class=" row justify-content-md-center c">
+							<div class="col-sm-3"
+								style="display: flex; justify-content: center;">
+								<button type="submit" class="btn  btn-secondary">Ingresar</button>
+							</div>
+						</div>
+					</form>
+					<article class="container  mt-4">
+						<div class="row justify-content-md-center mb-4">
+							<div class="col-sm-10 text-center">
+								<span>¿Olvidé mi contraseña?</span>
+							</div>
+						</div>
+
+						<div class="row justify-content-md-center mb-4">
+							<div class="col-sm-3 "
+								style="display: flex; justify-content: center;">
+								<button type="button" class="btn btn-outline-secondary ">Registrarse</button>
+							</div>
+
+						</div>
+					</article>
+				</div>
+			</section>
+		</div>
+	</main>
+	<footer th:replace="layouts/public-layout.html :: 'footer' ">
+	</footer>
+</body>
+</html>
